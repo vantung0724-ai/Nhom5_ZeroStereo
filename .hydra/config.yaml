@@ -1,0 +1,44 @@
+model:
+  name: RAFTStereo
+  max_disp: 700
+  train_iters: 22
+  valid_iters: 32
+  instance:
+    _target_: model.raft_stereo.RAFTStereo
+    args:
+      hidden_dims:
+      - 128
+      - 128
+      - 128
+      corr_implementation: reg
+      shared_backbone: false
+      corr_levels: 4
+      corr_radius: 4
+      n_downsample: 2
+      context_norm: batch
+      slow_fast_gru: false
+      n_gru_layers: 3
+gpus: ${oc.env:CUDA_VISIBLE_DEVICES, '0,1,2,3'}
+checkpoint: checkpoint/zero_raft_stereo/model.safetensors
+accelerator:
+  _target_: accelerate.Accelerator
+  dataloader_config:
+    _target_: accelerate.DataLoaderConfiguration
+    split_batches: true
+dataset:
+  frames_cleanpass:
+    outlier: 3
+    instance:
+      _target_: dataset.stereo_dataset.FramesCleanpass
+      root: C:/Users/tungh/ZeroStereo-main/dataset/datatest
+      mask: all
+dataloader:
+  split: true
+  batch_size_per_gpu: 1
+  total_batch_size: null
+  param:
+    batch_size: null
+    num_workers: null
+    pin_memory: true
+    shuffle: false
+    drop_last: false

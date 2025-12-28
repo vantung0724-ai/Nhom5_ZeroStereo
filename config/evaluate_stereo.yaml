@@ -1,0 +1,41 @@
+# configs/evaluate_stereo.yaml
+
+defaults:
+  - model: raft_stereo
+  - _self_
+
+# GPU devices (Windows cũng dùng được dạng string)
+gpus: ${oc.env:CUDA_VISIBLE_DEVICES, '0,1,2,3'}
+
+# Checkpoint model
+checkpoint: ${hydra:runtime.cwd}/checkpoints/zero_raft_stereo/model.safetensors
+
+
+# Accelerator settings
+accelerator:
+  _target_: accelerate.Accelerator
+  dataloader_config:
+    _target_: accelerate.DataLoaderConfiguration
+    split_batches: True
+
+# Dataset
+dataset:
+  datatest:
+    instance:
+      _target_: dataset.stereo_dataset.FramesCleanpass
+      root: "C:/Users/tungh/ZeroStereo-main/dataset"   # relative path đúng với Windows
+      mask: all
+    outlier: 3.0
+
+
+# Dataloader settings
+dataloader:
+  split: True
+  batch_size_per_gpu: 1
+  total_batch_size: null
+  param:
+    batch_size: null
+    num_workers: null
+    pin_memory: True
+    shuffle: False
+    drop_last: False
