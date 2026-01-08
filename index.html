@@ -1,11 +1,193 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Nhóm 5 - ZeroStereo</title>
+<html lang="vi"><head>
+<meta charset="UTF-8">
+<title>Kết quả thực nghiệm mô hình RAFT-STEREO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+body{
+    margin:0;
+    font-family: "Segoe UI", sans-serif;
+    background:#f4f6f8;
+    color:#2d3436;
+}
+.hero{
+    background:linear-gradient(135deg,#606161,#303d4a);
+    color:white;
+    padding:45px 20px;
+    text-align:center;
+}
+.hero h1{margin:0;font-size:2.2rem;}
+.hero p{margin:8px 0 0;font-size:1.1rem;}
+.hero .meta{margin-top:6px;font-size:.95rem;opacity:.9}
+
+.container{
+    max-width:1100px;
+    margin:30px auto;
+    padding:0 15px;
+}
+
+.card{
+    background:white;
+    border-radius:8px;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+    margin-bottom:30px;
+    overflow:hidden;
+}
+.card-header{
+    padding:15px 20px;
+    background:#f1f2f6;
+    border-bottom:1px solid #ddd;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:bold;
+}
+.card-body{padding:20px}
+
+.step-title{
+    font-weight:600;
+    margin-bottom:6px;
+    color:#0984e3;
+}
+.desc{
+    font-size:.9rem;
+    color:#636e72;
+    margin-bottom:12px;
+}
+img{
+    width:100%;
+    border-radius:6px;
+    border:1px solid #ddd;
+}
+.caption{
+    font-size:.85rem;
+    color:#636e72;
+    margin-top:6px;
+    font-style:italic;
+}
+
+.highlight{
+    background:#f8f9fa;
+    padding:12px;
+    border-left:4px solid #0984e3;
+    font-size:.9rem;
+    margin-top:15px;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    font-size:.85rem;
+    color:#636e72;
+}
+</style>
 </head>
+
 <body>
-  <h1>Nhóm 5</h1>
-  <h2>Zero-shot Stereo Matching from Single Images</h2>
-</body>
-</html>
+
+<div class="hero">
+    <h1>BÁO CÁO BÀI TẬP LỚN</h1>
+    <p>Xử lý dữ liệu lớn bằng kỹ thuật khớp ảnh lập thể</p>
+    <div class="meta">Nhóm 5 – 64HTTT1</div>
+</div>
+
+<div class="container">
+
+<!-- STEP 1 -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-database"></i>
+        Bước 1 – Khởi tạo môi trường &amp; mã nguồn
+    </div>
+    <div class="card-body">
+        <div class="step-title">Clone repository và cài đặt thư viện</div>
+        <p class="desc">
+            Mô hình RAFT-STEREO được triển khai trên nền tảng Kaggle Notebook. 
+            Các thư viện cần thiết được kiểm tra và cài đặt tự động.
+        </p>
+        <img src="anh1.jpg">
+        <div class="caption">
+            Hình 1: Clone mã nguồn RAFT-STEREO và xác nhận các thư viện học sâu đã sẵn sàng.
+        </div>
+    </div>
+</div>
+
+<!-- STEP 2 -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-language"></i>
+        Bước 2 – Chạy mô hình
+    </div>
+    <div class="card-body">
+        <div class="step-title">RAFT-STEREO nhận cặp ảnh trái–phải -> Dự đoán disparity map-> So sánh với ground truth
+Tính EPE cho từng ảnh -> Tổng hợp EPE trung bình & Bad pixel </div>
+        <p class="desc">
+            Hệ thống kiểm tra file đặc trưng ngữ nghĩa. Nếu chưa tồn tại, 
+            mô hình Word2Vec sẽ được tải và sử dụng để chuyển đổi thuộc tính văn bản sang vector.
+        </p>
+        <img src="anh2.jpg">
+        <div class="caption">
+            Hình 2: Kết quả tổng hợp cuối cùng
+dòng cuối:
+datatest/Pixel-wise EPE: 0.9308
+datatest/Bad 3.0px: 10.26%
+        </div>
+    </div>
+</div>
+
+<!-- STEP 3 -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-chart-line"></i>
+        Bước 3 – Disparity map
+    </div>
+    <div class="card-body">
+        <div class="step-title">Đây là disparity map mà RAFT-Stereo dự đoán cho Image 0 trong tập datatest.</div>
+        <p class="desc">
+            Thanh màu phía bên phải của ảnh tượng trưng cho: 
+         <p>Xanh → disparity nhỏ (vật xa)</p>   
+          <p> Đỏ → disparity lớn (vật gần)</p> 
+        </p>
+        <img src="anh4.jpg">
+        <div class="caption">
+            Hình 3: Bản đồ disparity + EPE của Image 0.
+        </div>
+
+        <div class="highlight">
+            <p>Mô hình tái tạo được cấu trúc chiều sâu hợp lý</p>
+            Các vùng gần (phía dưới ảnh) có disparity lớn, chuyển màu mượt → mô hình học ổn định
+        </div>
+    </div>
+</div>
+
+<!-- STEP 4 -->
+<div class="card">
+    <div class="card-header">
+        <i class="fas fa-terminal"></i>
+        Bước 4 – Bảng thống kê EPE theo từng ảnh
+    </div>
+    <div class="card-body">
+        <div class="step-title">Mỗi dòng tương ứng 1 cặp ảnh stereo</div>
+        <p class="desc">
+            Phân tích ảnh nào mô hình làm tốt hay kém
+         <p>Vẽ biểu đồ EPE theo image index</p>   
+          <p>Kết quả thực nghiệm</p> 
+        </p>
+        <img src="anh3.jpg">
+        <div class="caption">
+            Hình 4: log số liệu định lượng EPE theo từng ảnh.
+        </div>
+    </div>
+</div>
+
+</div>
+
+<footer>
+© 2026 – Trang trình bày kết quả thực nghiệm RAFT-STEREO
+</footer>
+
+
+
+</body></html>
